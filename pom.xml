@@ -10,13 +10,8 @@
     <description>DataNucleus Test for JDO</description>
 
     <properties>
-        <javax_jdo.ver>3.2.0-m5</javax_jdo.ver>
-        <dn.core.min.ver>5.0.1</dn.core.min.ver>
-        <dn.core.max.ver>5.1.99</dn.core.max.ver>
-        <dn.api_jdo.min.ver>5.0.1</dn.api_jdo.min.ver>
-        <dn.api_jdo.max.ver>5.1.99</dn.api_jdo.max.ver>
-        <dn.datastore.min.ver>5.0.1</dn.datastore.min.ver>
-        <dn.datastore.max.ver>5.1.99</dn.datastore.max.ver>
+        <javax_jdo.ver>3.2.0-m6</javax_jdo.ver>
+        <dn.ver>5.1.0-m1</dn.ver>
         <dn.maven.plugin.ver>5.0.2</dn.maven.plugin.ver>
     </properties>
 
@@ -30,26 +25,26 @@
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
-            <version>[${dn.core.min.ver}, ${dn.core.max.ver})</version>
+            <version>${dn.ver}</version>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
-            <version>[${dn.api_jdo.min.ver}, ${dn.api_jdo.max.ver})</version>
+            <version>${dn.ver}</version>
         </dependency>
         <!-- Change to the datanucleus-{datastore} plugin required -->
         <dependency>
             <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-rdbms</artifactId>
-            <version>[${dn.datastore.min.ver}, ${dn.datastore.max.ver})</version>
+            <artifactId>datanucleus-neo4j</artifactId>
+            <version>${dn.ver}</version>
         </dependency>
 
-        <!-- Change to the datastore driver required for your datastore -->
+        <!-- Change to the datastore driver required for your datastore 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.3.168</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>junit</groupId>
@@ -103,7 +98,6 @@
                 <version>${dn.maven.plugin.ver}</version>
                 <configuration>
                     <api>JDO</api>
-                    <persistenceUnitName>MyTest</persistenceUnitName>
                     <fork>false</fork>
                     <verbose>false</verbose>
                     <log4jConfiguration>${basedir}/src/main/resources/log4j.properties</log4jConfiguration>
