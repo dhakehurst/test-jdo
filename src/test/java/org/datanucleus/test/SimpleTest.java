@@ -17,8 +17,9 @@ import org.datanucleus.util.NucleusLogger;
 import org.junit.Assert;
 import org.junit.Test;
 
+import mydomain.model.CompoundContainer;
+import mydomain.model.CompoundItem;
 import mydomain.model.Contacts;
-import mydomain.model.MultiKey;
 import mydomain.model.Person;
 
 public class SimpleTest {
@@ -181,11 +182,11 @@ public class SimpleTest {
 	}
 
 	@Test
-	public void MultiplePrimaryKeys() {
+	public void CompoundIdentity() {
 		NucleusLogger.GENERAL.info(">> test START");
 
-		final String connectionUrl = "neo4j:db/MultiplePrimaryKeys";
-		final Path path = Paths.get("db/MultiplePrimaryKeys");
+		final String connectionUrl = "neo4j:db/CompoundIdentity";
+		final Path path = Paths.get("db/CompoundIdentity");
 		if (path.toFile().exists()) {
 			this.delete(path.toFile());
 		}
@@ -195,21 +196,19 @@ public class SimpleTest {
 		final Transaction tx = pm.currentTransaction();
 		try {
 			tx.begin();
-
-			final MultiKey item = new MultiKey(0, 0);
-
-			pm.makePersistent(item);
-
+			final CompoundContainer container = new CompoundContainer();
+			container.id = "cont1";
+			pm.makePersistent(container);
 			tx.commit();
 
 			tx.begin();
-
-			final Query<MultiKey> query2 = pm.newQuery(MultiKey.class);
-			final List<MultiKey> result2 = query2.executeList();
-
-			final boolean isEmpty2 = result2.isEmpty();
-			Assert.assertFalse(isEmpty2);
-
+			final Query<CompoundContainer> query2 = pm.newQuery(CompoundContainer.class);
+			final List<CompoundContainer> result2 = query2.executeList();
+			final CompoundContainer cont = result2.get(0);
+			final CompoundItem item = new CompoundItem();
+			item.owner = cont;
+			item.id = "item1";
+			cont.getItems().add(item);
 			tx.commit();
 
 		} catch (final Throwable thr) {
