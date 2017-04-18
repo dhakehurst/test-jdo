@@ -208,7 +208,7 @@ public class SimpleTest {
 			final List<MultiKey> result2 = query2.executeList();
 
 			final boolean isEmpty2 = result2.isEmpty();
-			Assert.assertTrue(isEmpty2);
+			Assert.assertFalse(isEmpty2);
 
 			tx.commit();
 
