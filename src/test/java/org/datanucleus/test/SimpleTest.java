@@ -18,6 +18,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import mydomain.model.Contacts;
+import mydomain.model.MultiKey;
 import mydomain.model.Person;
 
 public class SimpleTest {
@@ -74,7 +75,7 @@ public class SimpleTest {
 			final List<Contacts> result2 = query2.executeList();
 
 			final boolean isEmpty2 = result2.isEmpty();
-			Assert.assertTrue(isEmpty2);
+			Assert.assertFalse(isEmpty2);
 
 			tx.commit();
 
@@ -179,4 +180,49 @@ public class SimpleTest {
 		NucleusLogger.GENERAL.info(">> test END");
 	}
 
+	@Test
+	public void MultiplePrimaryKeys() {
+		NucleusLogger.GENERAL.info(">> test START");
+
+		final String connectionUrl = "neo4j:db/MultiplePrimaryKeys";
+		final Path path = Paths.get("db/MultiplePrimaryKeys");
+		if (path.toFile().exists()) {
+			this.delete(path.toFile());
+		}
+
+		final PersistenceManagerFactory pmf = this.connectDb(connectionUrl);
+		final PersistenceManager pm = pmf.getPersistenceManager();
+		final Transaction tx = pm.currentTransaction();
+		try {
+			tx.begin();
+
+			final MultiKey item = new MultiKey(0, 0);
+
+			pm.makePersistent(item);
+
+			tx.commit();
+
+			tx.begin();
+
+			final Query<MultiKey> query2 = pm.newQuery(MultiKey.class);
+			final List<MultiKey> result2 = query2.executeList();
+
+			final boolean isEmpty2 = result2.isEmpty();
+			Assert.assertTrue(isEmpty2);
+
+			tx.commit();
+
+		} catch (final Throwable thr) {
+			NucleusLogger.GENERAL.error(">> Exception in test", thr);
+			Assert.fail("Failed test : " + thr.getMessage());
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			pm.close();
+		}
+
+		pmf.close();
+		NucleusLogger.GENERAL.info(">> test END");
+	}
 }

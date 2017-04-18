@@ -1,3 +1,6 @@
 target
 *.log
 /bin
+.project
+.classpath
+db
